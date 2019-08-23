@@ -47,13 +47,41 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/budget", (req, res) => {
+  client.connect(err => {
+    const collection = client.db("budget").collection("budgetCategories");
+    // perform actions on the collection object
+    const results = collection.find({}).toArray((err, docs) => {
+      console.log(docs);
+      res.send(docs);
+    });
+
+    client.close();
+  });
+});
+
 app.post("/", (req, res) => {
   client.connect(async err => {
     const collection = client.db("budget").collection("bankData");
     await bankResults();
     console.log("inserts", results);
     collection.insertMany(results);
+    res.send(results);
 
+    client.close();
+  });
+});
+
+
+app.post("/budget", (req, res) => {
+  const body = [req.body];
+  console.log("post budget",req.body)
+  client.connect(async err => {
+    const collection = client.db("budget").collection("budgetCategories");
+    const results = await collection.insertMany(body);
+    console.log("inserts", results);
+    res.send(results)
+    
     client.close();
   });
 });
