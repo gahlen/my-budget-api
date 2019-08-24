@@ -8,6 +8,7 @@ const ObjectId = require("mongodb").ObjectId;
 const app = express();
 const port = process.env.PORT || 4000;
 const results = [];
+const putResults = [];
 const url =
   "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
 const client = new MongoClient(url, {
@@ -85,20 +86,24 @@ app.post("/category", (req, res) => {
   });
 });
 
-app.put("/category/:category/:amount", (req, res) => {
-  const body = req.body;
-  client.connect(async err => {
-    const collection = client.db("budget").collection("budgetCategories");
-    // perform actions on the collection object
-    const results = await collection.updateOne(
-      { category: req.params.category },
-      { $set: { budgetAmount: req.params.amount }}
-    );
-    res.send(results);
 
-    client.close();
-  });
-});
+ const body = [req.body];
+  loadPutArray(body);
+  console.log("put results",putResults)
+
+  // client.connect(async err => {
+  //   const collection = client.db("budget").collection("bankData");
+  //   // perform actions on the collection object
+  //   const results = await collection.updateOne(
+  //     { refNumber: req.params.refNumber },
+  //     { $set: { budgetAmount: req.params.amount }}
+  //   );
+  //   res.send(results);
+
+  //   client.close();
+  //});
+});app.put("/budget", (req, res) => {
+ 
 
 app.delete("/category/:category", (req, res) => {
   // res.send(`Deleted. ${req.params.ID}`);
@@ -113,6 +118,16 @@ app.delete("/category/:category", (req, res) => {
     client.close();
   });
 });
+
+const loadPutArray = (body) => {
+  const putArray = []
+  console.log("api body", body)
+  body.forEach(element => {
+    putArray.push(Object.entries(element));
+    console.log("putArray",putArray)
+  });
+  return putResults;
+}
 
 const bankResults = () => {
   let complete = new Promise((resolve, reject) => {
