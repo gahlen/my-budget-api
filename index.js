@@ -8,6 +8,8 @@ const ObjectId = require("mongodb").ObjectId;
 const app = express();
 const port = process.env.PORT || 4000;
 const results = [];
+const putResults = [];
+
 const url =
   "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
 const client = new MongoClient(url, {
@@ -51,7 +53,6 @@ app.get("/category", (req, res) => {
     const collection = client.db("budget").collection("budgetCategories");
     // perform actions on the collection object
     const results = collection.find({}).toArray((err, docs) => {
-      console.log(docs);
       res.send(docs);
     });
 
@@ -71,15 +72,14 @@ app.post("/", (req, res) => {
   });
 });
 
-
 app.post("/category", (req, res) => {
   const body = [req.body];
-  console.log("post budget",req.body)
+  console.log("post ledger", req.body);
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
     const results = await collection.insertMany(body);
     console.log("inserts", results);
-    res.send(results)
+    res.send(results);
 
     client.close();
   });
@@ -92,8 +92,26 @@ app.put("/category/:category/:amount", (req, res) => {
     // perform actions on the collection object
     const results = await collection.updateOne(
       { category: req.params.category },
-      { $set: { budgetAmount: req.params.amount }}
+      { $set: { budgetAmount: req.params.amount } }
     );
+    res.send(results);
+
+    client.close();
+  });
+});
+
+app.put("/ledger", (req, res) => {
+  client.connect(async err => {
+    const collection = client.db("budget").collection("bankData");
+    // perform actions on the collection object
+      const results = await req.body.map(async data => {
+      const {_id, ...updateData} = data //must destructure Id since we can't update it...
+      const result = await collection.updateOne(
+      { _id: ObjectId(_id) },
+      { $set: updateData }
+      );
+      return result;
+    });
     res.send(results);
 
     client.close();
@@ -133,7 +151,7 @@ const bankResults = () => {
               case "Description":
                 header = "description";
                 break;
-                case "Transaction Category":
+              case "Transaction Category":
                 header = "category";
                 break;
               case "Amount":
