@@ -16,3 +16,17 @@ const loadPutArray = (body,reference) => {
   // filter/includes example
   let putData = this.state.entryData.filter(data => 
     reference.includes(data.refNumber))
+
+
+    .then(this.state.entryData.forEach(element => {
+        this.setState.budgetTotal += parseFloat(element.budgetAmount)
+        console.log("budget Total",this.this.state.budgetTotal)
+      })) 
+
+
+
+      {/* <BootstrapTable
+          keyField="_id"
+          data={this.props.entryData}
+          columns={columns}
+        /> */}

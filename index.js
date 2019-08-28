@@ -65,6 +65,10 @@ app.post("/", (req, res) => {
     const collection = client.db("budget").collection("bankData");
     await bankResults();
     console.log("inserts", results);
+    results.forEach(element => {
+      element.amount = parseFloat(element.amount)
+      element.balance = parseFloat(element.balance)
+    })
     collection.insertMany(results);
     res.send(results);
 
