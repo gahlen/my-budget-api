@@ -1,0 +1,183 @@
+[
+    {
+        "_id": "5d5f13b78b833c1af9eced08",
+        "category": "AutoIns",
+        "budgetAmount": "81.00"
+    },
+    {
+        "_id": "5d5f32848b833c1af9eced0e",
+        "category": "AutoReplace",
+        "budgetAmount": "0.00"
+    },
+    {
+        "_id": "5d5f329b8b833c1af9eced10",
+        "category": "PropTax",
+        "budgetAmount": "271.00"
+    },
+    {
+        "_id": "5d5f32b98b833c1af9eced11",
+        "category": "LifeIns",
+        "budgetAmount": "85.00"
+    },
+    {
+        "_id": "5d5f32c88b833c1af9eced12",
+        "category": "OtherOffering",
+        "budgetAmount": "70.00"
+    },
+    {
+        "_id": "5d5f32fa8b833c1af9eced13",
+        "category": "Missionary",
+        "budgetAmount": "100.00"
+    },
+    {
+        "_id": "5d5f32fc8b833c1af9eced14",
+        "category": "HomeIns",
+        "budgetAmount": "64.20"
+    },
+    {
+        "_id": "5d5f330e8b833c1af9eced15",
+        "category": "Tithing",
+        "budgetAmount": "225.00"
+    },
+    {
+        "_id": "5d5f33138b833c1af9eced16",
+        "category": "Electric",
+        "budgetAmount": "50.00"
+    },
+    {
+        "_id": "5d5f33318b833c1af9eced17",
+        "category": "FastOffering",
+        "budgetAmount": "200.00"
+    },
+    {
+        "_id": "5d5f33408b833c1af9eced18",
+        "category": "Garbage",
+        "budgetAmount": "15.00"
+    },
+    {
+        "_id": "5d5f33728b833c1af9eced19",
+        "category": "Gas",
+        "budgetAmount": "35.00"
+    },
+    {
+        "_id": "5d5f33748b833c1af9eced1a",
+        "category": "Internet",
+        "budgetAmount": "54.95"
+    },
+    {
+        "_id": "5d645d692092add3e0574c72",
+        "category": "Tiina",
+        "budgetAmount": "100.00"
+    },
+    {
+        "_id": "5d645d882092add3e0574c73",
+        "category": "Gahlen",
+        "budgetAmount": "150.00"
+    },
+    {
+        "_id": "5d645dbf2092add3e0574c74",
+        "category": "Phone",
+        "budgetAmount": "90.00"
+    },
+    {
+        "_id": "5d655abad50c79dfe3f21ae3",
+        "category": "Groceries",
+        "budgetAmount": "450.00"
+    },
+    {
+        "_id": "5d6586469cca02e430ff0d9f",
+        "category": "Sewer",
+        "budgetAmount": "10.00",
+        "budgetTotal": 2160.15
+    },
+    {
+        "_id": "5d6587e99cca02e430ff0da0",
+        "category": "Appliance",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2170.15
+    },
+    {
+        "_id": "5d65880e9cca02e430ff0da1",
+        "category": "HomeRepair",
+        "budgetAmount": "80.00",
+        "budgetTotal": 2170.15
+    },
+    {
+        "_id": "5d6588269cca02e430ff0da2",
+        "category": "FoodStorage",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2250.15
+    },
+    {
+        "_id": "5d65883c9cca02e430ff0da3",
+        "category": "HomeSchool",
+        "budgetAmount": "20.00",
+        "budgetTotal": 2250.15
+    },
+    {
+        "_id": "5d65885a9cca02e430ff0da4",
+        "category": "Hygiene",
+        "budgetAmount": "30.00",
+        "budgetTotal": 2270.15
+    },
+    {
+        "_id": "5d6588739cca02e430ff0da5",
+        "category": "Livestock",
+        "budgetAmount": "30.00",
+        "budgetTotal": 2300.15
+    },
+    {
+        "_id": "5d6588879cca02e430ff0da6",
+        "category": "Meat",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2330.15
+    },
+    {
+        "_id": "5d65889b9cca02e430ff0da7",
+        "category": "PCReplace",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2330.15
+    },
+    {
+        "_id": "5d6588b69cca02e430ff0da8",
+        "category": "AutoGas",
+        "budgetAmount": "100.00",
+        "budgetTotal": 2330.15
+    },
+    {
+        "_id": "5d6588d79cca02e430ff0da9",
+        "category": "AutoMaint",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2430.15
+    },
+    {
+        "_id": "5d6588f99cca02e430ff0daa",
+        "category": "Clothing",
+        "budgetAmount": "70.00",
+        "budgetTotal": 2430.15
+    },
+    {
+        "_id": "5d65890e9cca02e430ff0dab",
+        "category": "Medical",
+        "budgetAmount": "50.00",
+        "budgetTotal": 2500.15
+    },
+    {
+        "_id": "5d65891a9cca02e430ff0dac",
+        "category": "Misc",
+        "budgetAmount": "50.00",
+        "budgetTotal": 2550.15
+    },
+    {
+        "_id": "5d6589269cca02e430ff0dad",
+        "category": "Vacation",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2600.15
+    },
+    {
+        "_id": "5d6589669cca02e430ff0dae",
+        "category": "Landscape",
+        "budgetAmount": "0.00",
+        "budgetTotal": 2580.15
+    }
+]

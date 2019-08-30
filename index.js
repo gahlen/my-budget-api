@@ -9,9 +9,9 @@ const app = express();
 const port = process.env.PORT || 4000;
 const results = [];
 const putResults = [];
-
-const url =
-  "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
+const url = "mongodb://localhost:27017"
+// const url =
+//   "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
 const client = new MongoClient(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -25,8 +25,7 @@ app.get("/:key/:value", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("bankData");
     // perform actions on the collection object
-    const results = collection
-      .find({ [req.params.key]: req.params.value })
+    collection.find({ [req.params.key]: req.params.value })
       .toArray((err, docs) => {
         console.log(docs);
         res.send(docs);
@@ -40,7 +39,7 @@ app.get("/", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("bankData");
     // perform actions on the collection object
-    const results = collection.find({}).toArray((err, docs) => {
+    collection.find({}).toArray((err, docs) => {
       res.send(docs);
     });
 
@@ -52,8 +51,29 @@ app.get("/category", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("budgetCategories");
     // perform actions on the collection object
-    const results = collection.find({}).toArray((err, docs) => {
+    collection.find({}).toArray((err, docs) => {
+
       res.send(docs);
+      
+    });
+
+    client.close();
+  });
+});
+
+app.get("/budget", (req, res) => {
+  client.connect(err => {
+    const db = client.db("budget")
+    const collection = client.db("budget").collection("budgetDetails");
+    // perform actions on the collection object
+    collection.find({}).toArray((err, docs) => {
+      let results = docs.map(doc => ({
+        category: doc.category,
+        budget: doc.budgetAmount,
+        amount: doc.budget.reduce((acc, cur) => acc + cur.amount,0),
+        difference: eval(doc.budgetAmount + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
+      }))
+      res.send(results);
     });
 
     client.close();
@@ -77,7 +97,7 @@ app.post("/", (req, res) => {
 });
 
 app.post("/category", (req, res) => {
-  const body = [req.body];
+  const body = req.body;
   console.log("post ledger", req.body);
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");

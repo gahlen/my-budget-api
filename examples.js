@@ -30,3 +30,18 @@ const loadPutArray = (body,reference) => {
           data={this.props.entryData}
           columns={columns}
         /> */}
+//code for destructuring and removing a field in an array of objects 
+docs.map((doc) =>{
+    let {_id,...result}=doc
+    return result
+  })
+
+  //Create view in the mongo shell(enter mongo in editor to enter mongo shell)
+  db.createView(
+    "budgetDetails",
+    "budgetCategories",
+    [
+      { $lookup: { from: "bankData", localField: "category", foreignField: "category", as: "budget" } },
+      { $project: { "budget.type": 0, "budget._id": 0, "budget.description": 0, "budget.balance": 0 } }
+    ]
+ )
