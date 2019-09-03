@@ -27,7 +27,6 @@ app.get("/:key/:value", (req, res) => {
     // perform actions on the collection object
     collection.find({ [req.params.key]: req.params.value })
       .toArray((err, docs) => {
-        console.log(docs);
         res.send(docs);
       });
 
@@ -52,9 +51,7 @@ app.get("/category", (req, res) => {
     const collection = client.db("budget").collection("budgetCategories");
     // perform actions on the collection object
     collection.find({}).toArray((err, docs) => {
-
-      res.send(docs);
-      
+      res.send(docs);    
     });
 
     client.close();
@@ -84,7 +81,6 @@ app.post("/", (req, res) => {
   client.connect(async err => {
     const collection = client.db("budget").collection("bankData");
     await bankResults();
-    console.log("inserts", results);
     results.forEach(element => {
       element.amount = parseFloat(element.amount)
       element.balance = parseFloat(element.balance)
@@ -98,11 +94,10 @@ app.post("/", (req, res) => {
 
 app.post("/category", (req, res) => {
   const body = req.body;
-  console.log("post ledger", req.body);
+  console.log("reqbody", body)
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
     const results = await collection.insertMany(body);
-    console.log("inserts", results);
     res.send(results);
 
     client.close();
