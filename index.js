@@ -7,8 +7,7 @@ const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
 const port = process.env.PORT || 4000;
-const results = [];
-const putResults = [];
+let results = [];
 const url = "mongodb://localhost:27017"
 // const url =
 //   "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
@@ -21,63 +20,7 @@ const client = new MongoClient(url, {
 app.use(express.json());
 app.use(cors());
 
-app.get("/:key/:value", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("budget").collection("bankData");
-    // perform actions on the collection object
-    collection.find({ [req.params.key]: req.params.value })
-      .toArray((err, docs) => {
-        res.send(docs);
-      });
-
-    client.close();
-  });
-});
-
-app.get("/", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("budget").collection("bankData");
-    // perform actions on the collection object
-    collection.find({}).toArray((err, docs) => {
-      res.send(docs);
-    });
-
-    client.close();
-  });
-});
-
-app.get("/category", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("budget").collection("budgetCategories");
-    // perform actions on the collection object
-    collection.find({}).toArray((err, docs) => {
-      res.send(docs);    
-    });
-
-    client.close();
-  });
-});
-
-app.get("/budget", (req, res) => {
-  client.connect(err => {
-    const db = client.db("budget")
-    const collection = client.db("budget").collection("budgetDetails");
-    // perform actions on the collection object
-    collection.find({}).toArray((err, docs) => {
-      let results = docs.map(doc => ({
-        category: doc.category,
-        budget: doc.budgetAmount,
-        amount: doc.budget.reduce((acc, cur) => acc + cur.amount,0),
-        difference: eval(doc.budgetAmount + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
-      }))
-      res.send(results);
-    });
-
-    client.close();
-  });
-});
-
-app.post("/", (req, res) => {
+app.post("/ledger", (req, res) => {
   client.connect(async err => {
     const collection = client.db("budget").collection("bankData");
     await bankResults();
@@ -93,7 +36,7 @@ app.post("/", (req, res) => {
 });
 
 app.post("/category", (req, res) => {
-  const body = req.body;
+  const body =  req.body;
   console.log("reqbody", body)
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
@@ -104,14 +47,82 @@ app.post("/category", (req, res) => {
   });
 });
 
-app.put("/category/:category/:amount", (req, res) => {
+app.get("/:key/:value", (req, res) => {
+  client.connect(err => {
+    const collection = client.db("budget").collection("budgetSummary");
+    collection.find({ [req.params.key]: req.params.value })
+      .toArray((err, docs) => {
+        res.send(docs);
+      });
+
+    client.close();
+  });
+});
+
+app.get("/ledger", async (req, res) => {  
+  await bankResults();
+  results.forEach(element => {
+    element.amount = parseFloat(element.amount)
+    element.balance = parseFloat(element.balance)
+  })
+  console.log(results)
+  res.send(results);  
+
+
+  });
+
+app.get("/category", (req, res) => {
+  client.connect(err => {
+    const collection = client.db("budget").collection("budgetCategories");
+    collection.find({}).toArray((err, docs) => {
+      res.send(docs);    
+    });
+
+    client.close();
+  });
+});
+
+app.get("/summary", (req, res) => {
+  client.connect(err => {
+    const collection = client.db("budget").collection("budgetSummary");
+    collection.find({}).toArray((err, docs) => {
+      res.send(docs);    
+    });
+
+    client.close();
+  });
+});
+
+app.get("/budget", (req, res) => {
+  client.connect(err => {
+    const db = client.db("budget")
+    const collection = client.db("budget").collection("budgetDetails");
+    collection.find({}).toArray((err, docs) => {
+      let results = docs.map(doc => ({
+        category: doc.category,
+        budget: doc.budgetAmount,
+        carryover: doc.budgetBalance,
+        amount: doc.budget.reduce((acc, cur) => acc + cur.amount,0),
+        difference: eval(doc.budgetAmount + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
+      }))
+      console.log("budget details",results)
+      res.send(results);
+    });
+
+    client.close();
+  });
+});
+
+
+app.put("/category/:category/:amount/:balance", (req, res) => {
   const body = req.body;
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
     // perform actions on the collection object
     const results = await collection.updateOne(
       { category: req.params.category },
-      { $set: { budgetAmount: req.params.amount } }
+      { $set: { budgetAmount: req.params.amount, budgetBalance: req.params.balance } },
+      { upsert: true}
     );
     res.send(results);
 
@@ -119,15 +130,16 @@ app.put("/category/:category/:amount", (req, res) => {
   });
 });
 
-app.put("/ledger", (req, res) => {
+app.put("/summary", (req, res) => {
   client.connect(async err => {
-    const collection = client.db("budget").collection("bankData");
-    // perform actions on the collection object
+    const collection = client.db("budget").collection("budgetSummary");
       const results = await req.body.map(async data => {
       const {_id, ...updateData} = data //must destructure Id since we can't update it...
+      console.log("data",data)
       const result = await collection.updateOne(
-      { _id: ObjectId(_id) },
-      { $set: updateData }
+      { refNumber: data.refNumber },
+      { $set: updateData },
+      { upsert: true}
       );
       return result;
     });
@@ -141,7 +153,6 @@ app.delete("/category/:category", (req, res) => {
   // res.send(`Deleted. ${req.params.ID}`);
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
-    // perform actions on the collection object
     const results = await collection.deleteOne({
       category: req.params.category
     });
@@ -152,6 +163,7 @@ app.delete("/category/:category", (req, res) => {
 });
 
 const bankResults = () => {
+  results = []
   let complete = new Promise((resolve, reject) => {
     fs.createReadStream("../bankFile.csv", "utf8")
       .pipe(

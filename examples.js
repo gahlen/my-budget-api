@@ -41,7 +41,11 @@ docs.map((doc) =>{
     "budgetDetails",
     "budgetCategories",
     [
-      { $lookup: { from: "bankData", localField: "category", foreignField: "category", as: "budget" } },
+      { $lookup: { from: "budgetSummary", localField: "category", foreignField: "category", as: "budget" } },
       { $project: { "budget.type": 0, "budget._id": 0, "budget.description": 0, "budget.balance": 0 } }
     ]
  )
+
+ // This example will exclude the named states and keep the
+ // rest in body
+ let [{budgetTotal, incomeTotal, ...body}] = this.state
