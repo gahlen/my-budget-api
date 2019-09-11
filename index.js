@@ -100,12 +100,11 @@ app.get("/budget", (req, res) => {
     collection.find({}).toArray((err, docs) => {
       let results = docs.map(doc => ({
         category: doc.category,
-        budget: doc.budgetAmount,
-        carryover: doc.budgetBalance,
+        budget: parseFloat(doc.budgetAmount),
+        carryover: parseFloat(doc.budgetBalance),
         amount: doc.budget.reduce((acc, cur) => acc + cur.amount,0),
-        difference: eval(doc.budgetAmount + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
+        difference: eval(parseFloat(doc.budgetAmount) + parseFloat(doc.budgetBalance) + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
       }))
-      console.log("budget details",results)
       res.send(results);
     });
 
@@ -171,7 +170,7 @@ const bankResults = () => {
           mapHeaders: ({ header }) => {
             switch (header) {
               case "Effective Date":
-                header = "effectiveDate";
+                header = "postDate";
                 break;
               case "Transaction Type":
                 header = "type";

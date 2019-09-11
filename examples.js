@@ -1,3 +1,7 @@
+
+
+import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
+
 putArray.push(Object.entries(element)); //parse object key value pairs into an array
 
 
@@ -46,6 +50,30 @@ docs.map((doc) =>{
     ]
  )
 
+ ,
+ editor: {
+   type: Type.SELECT,
+   getOptions: (setOptions, { row, column }) => {
+     return this.state.categoryData.map(category => ({
+       value: category.category,
+       label: category.category
+     }));
+   }
+ }
+ const cellEdit = cellEditFactory({
+  mode: "click",
+  blurToSave: true
+});
+
  // This example will exclude the named states and keep the
  // rest in body
  let [{budgetTotal, incomeTotal, ...body}] = this.state
+
+
+
+ {this.state.showing.true && <output>Hello</output>} 
+    this.setState({ showing: true })
+
+    const { showing } = this.state;
+
+
