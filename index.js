@@ -59,10 +59,10 @@ app.get("/ledger", async (req, res) => {
 
   });
 
-app.get("/category", async (req, res) => {
+app.get("/category", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("budgetCategories");
-    await collection.find({}).toArray((err, docs) => {
+    collection.find({}).toArray((err, docs) => {
       res.send(docs);    
     });
 
