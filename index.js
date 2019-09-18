@@ -3,14 +3,15 @@ const cors = require("cors"); //cross origin resource sharing
 const fs = require("fs");
 const csv = require("csv-parser");
 const MongoClient = require("mongodb").MongoClient;
+require('dotenv').config()
+                  
 
 const app = express();
 const port = process.env.PORT || 4000;
 let results = [];
-const url = "mongodb://localhost:27017"
-// const url =
-//   "mongodb+srv://admin-Fridley:_fjmhJ8MH-aTjm!@cluster0-bdcxo.mongodb.net/budget?retryWrites=true&w=majority";
-const client = new MongoClient(url, {
+const url_local = process.env.REACT_APP_MONGOKEY_LOCAL
+const url_remote = process.env.REACT_APP_MONGOKEY_REMOTE
+const client = new MongoClient(url_local, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -47,18 +48,6 @@ app.post("/category", (req, res) => {
   });
 });
 
-app.get("/:key/:value", (req, res) => {
-  client.connect(err => {
-    const collection = client.db("budget").collection("budgetSummary");
-    collection.find({ [req.params.key]: req.params.value })
-      .toArray((err, docs) => {
-        res.send(docs);
-      });
-
-    client.close();
-  });
-});
-
 app.get("/ledger", async (req, res) => {  
   await bankResults();
   results.forEach(element => {
@@ -80,7 +69,7 @@ app.get("/category", (req, res) => {
     client.close();
   });
 });
-///:startDate/:endDate"
+//:startDate/:endDate"
 app.get("/summary", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("budgetSummary");
