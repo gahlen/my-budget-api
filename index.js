@@ -61,7 +61,7 @@ app.post("/category", (req, res) => {
 
 app.get("/ledger", (req, res) => {
   client.connect(err => {
-    const collection = client.db("budget").collection("budgetData");
+    const collection = client.db("budget").collection("bankData");
     collection.find({}).toArray((err, docs) => {
       res.send(docs);    
     });
