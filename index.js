@@ -48,16 +48,27 @@ app.post("/category", (req, res) => {
   });
 });
 
-app.get("/ledger", async (req, res) => {  
-  await bankResults();
-  results.forEach(element => {
-    element.amount = parseFloat(element.amount)
-    element.balance = parseFloat(element.balance)
-  })
-  console.log(results)
-  res.send(results);  
+// app.get("/ledger", async (req, res) => {  
+//   await bankResults();
+//   results.forEach(element => {
+//     element.amount = parseFloat(element.amount)
+//     element.balance = parseFloat(element.balance)
+//   })
+//   console.log(results)
+//   res.send(results);  
 
+//   });
+
+app.get("/ledger", (req, res) => {
+  client.connect(err => {
+    const collection = client.db("budget").collection("budgetData");
+    collection.find({}).toArray((err, docs) => {
+      res.send(docs);    
+    });
+
+    client.close();
   });
+});
 
 app.get("/category", (req, res) => {
   client.connect(err => {
