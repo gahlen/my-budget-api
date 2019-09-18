@@ -1,9 +1,8 @@
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors"); //cross origin resource sharing
 const fs = require("fs");
 const csv = require("csv-parser");
 const MongoClient = require("mongodb").MongoClient;
-const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -20,6 +19,7 @@ const client = new MongoClient(url, {
 app.use(express.json());
 app.use(cors());
 
+// The "/ledger" is referred to as the restful endpoint.
 app.post("/ledger", (req, res) => {
   client.connect(async err => {
     const collection = client.db("budget").collection("bankData");
@@ -68,7 +68,6 @@ app.get("/ledger", async (req, res) => {
   console.log(results)
   res.send(results);  
 
-
   });
 
 app.get("/category", (req, res) => {
@@ -81,11 +80,11 @@ app.get("/category", (req, res) => {
     client.close();
   });
 });
-
+///:startDate/:endDate"
 app.get("/summary", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("budgetSummary");
-    collection.find({}).toArray((err, docs) => {
+    collection.find({"postDate":{"$gte": ("2019-09-01"), "$lte": ("2019-09-06")}}).sort( { refNumber: -1 } ).toArray((err, docs) => {
       res.send(docs);    
     });
 
@@ -102,10 +101,11 @@ app.get("/budget", (req, res) => {
         category: doc.category,
         budget: parseFloat(doc.budgetAmount),
         carryover: parseFloat(doc.budgetBalance),
-        amount: doc.budget.reduce((acc, cur) => acc + cur.amount,0),
-        difference: eval(parseFloat(doc.budgetAmount) + parseFloat(doc.budgetBalance) + doc.budget.reduce((acc, cur) => acc + cur.amount,0)).toFixed(2)
+        amount: eval(doc.budget.reduce((acc, cur) => acc + parseFloat(cur.amount),0)).toFixed(2),
+        difference: eval(parseFloat(doc.budgetAmount) + parseFloat(doc.budgetBalance) + doc.budget.reduce((acc, cur) => acc + parseFloat(cur.amount),0)).toFixed(2)
       }))
       res.send(results);
+      console.log("results",results)
     });
 
     client.close();
@@ -114,7 +114,6 @@ app.get("/budget", (req, res) => {
 
 
 app.put("/category/:category/:amount/:balance", (req, res) => {
-  const body = req.body;
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetCategories");
     // perform actions on the collection object
@@ -133,12 +132,12 @@ app.put("/summary", (req, res) => {
   client.connect(async err => {
     const collection = client.db("budget").collection("budgetSummary");
       const results = await req.body.map(async data => {
+      data.postDate = new Date(data.postDate).toISOString()
       const {_id, ...updateData} = data //must destructure Id since we can't update it...
-      console.log("data",data)
       const result = await collection.updateOne(
-      { refNumber: data.refNumber },
+      { refNumber: data.refNumber },   //This format used since refNumber will be the key used for the put
       { $set: updateData },
-      { upsert: true}
+      { upsert: true }
       );
       return result;
     });

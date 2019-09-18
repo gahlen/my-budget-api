@@ -46,7 +46,7 @@ docs.map((doc) =>{
     "budgetCategories",
     [
       { $lookup: { from: "budgetSummary", localField: "category", foreignField: "category", as: "budget" } },
-      { $project: { "budget.type": 0, "budget._id": 0, "budget.description": 0, "budget.balance": 0 } }
+      { $project: { "budget.type": 0, "budget._id": 0, "budget.description": 0, "budget.balance": 0, "budget.processed": 0 } }
     ]
  )
 
