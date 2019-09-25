@@ -11,7 +11,7 @@ const port = process.env.PORT || 4000;
 let results = [];
 const url_local = process.env.REACT_APP_MONGOKEY_LOCAL
 const url_remote = process.env.REACT_APP_MONGOKEY_REMOTE
-const client = new MongoClient(url_remote, {
+const client = new MongoClient(url_local, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -81,10 +81,12 @@ app.get("/category", (req, res) => {
   });
 });
 //:startDate/:endDate"
-app.get("/summary", (req, res) => {
+app.get("/summary/:startDate/:endDate", (req, res) => {
   client.connect(err => {
     const collection = client.db("budget").collection("budgetSummary");
-    collection.find({"postDate":{"$gte": ("2019-09-01"), "$lte": ("2019-09-06")}}).sort( { refNumber: -1 } ).toArray((err, docs) => {
+    collection.find({"postDate":{"$gte": (req.params.startDate), "$lte": (req.params.endDate)}}).sort( { refNumber: -1 } ).toArray((err, docs) => {
+  //collection.find({"postDate":{"$gte": ("2019-09-01"), "$lte": ("2019-09-06")}}).sort( { refNumber: -1 } ).toArray((err, docs) => {
+
       res.send(docs);    
     });
 
