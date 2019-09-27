@@ -11,7 +11,7 @@ const port = process.env.PORT || 4000;
 let results = [];
 const url_local = process.env.REACT_APP_MONGOKEY_LOCAL
 const url_remote = process.env.REACT_APP_MONGOKEY_REMOTE
-const client = new MongoClient(url_remote, {
+const client = new MongoClient(url_local, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
